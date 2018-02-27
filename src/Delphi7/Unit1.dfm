@@ -58,22 +58,18 @@ object Form1: TForm1
     TabOrder = 3
     OnClick = CheckBox1Click
   end
-  object ServerSocket1: TServerSocket
-    Active = False
-    Port = 9090
-    ServerType = stNonBlocking
-    OnListen = ServerSocket1Listen
-    OnAccept = ServerSocket1Accept
-    OnGetThread = ServerSocket1GetThread
-    OnGetSocket = ServerSocket1GetSocket
-    OnThreadStart = ServerSocket1ThreadStart
-    OnThreadEnd = ServerSocket1ThreadEnd
-    OnClientConnect = ServerSocket1ClientConnect
-    OnClientDisconnect = ServerSocket1ClientDisconnect
-    OnClientRead = ServerSocket1ClientRead
-    OnClientWrite = ServerSocket1ClientWrite
-    OnClientError = ServerSocket1ClientError
+  object IdHTTPServer1: TIdHTTPServer
+    Bindings = <>
+    CommandHandlers = <>
+    DefaultPort = 9090
+    Greeting.NumericCode = 0
+    MaxConnectionReply.NumericCode = 0
+    ReplyExceptionCode = 0
+    ReplyTexts = <>
+    ReplyUnknownCommand.NumericCode = 0
+    OnCommandOther = IdHTTPServer1CommandOther
+    OnCommandGet = IdHTTPServer1CommandGet
     Left = 416
-    Top = 16
+    Top = 8
   end
 end

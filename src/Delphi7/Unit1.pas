@@ -4,28 +4,23 @@ interface
 
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls, ExtCtrls, ShellApi, ScktComp;
+    Dialogs, StdCtrls, ExtCtrls, ShellApi, ScktComp, IdBaseComponent,
+    IdComponent, IdTCPServer, IdCustomHTTPServer, IdHTTPServer;
 
 type
     TForm1 = class(TForm)
         Panel1: TPanel;
         Button1: TButton;
         Memo1: TMemo;
-        ServerSocket1: TServerSocket;
         CheckBox1: TCheckBox;
+        IdHTTPServer1: TIdHTTPServer;
         procedure Button1Click(Sender: TObject);
-        procedure ServerSocket1Accept(Sender: TObject; Socket: TCustomWinSocket);
-        procedure ServerSocket1ClientConnect(Sender: TObject; Socket: TCustomWinSocket);
-        procedure ServerSocket1ClientDisconnect(Sender: TObject; Socket: TCustomWinSocket);
-        procedure ServerSocket1ClientError(Sender: TObject; Socket: TCustomWinSocket; ErrorEvent: TErrorEvent; var ErrorCode: Integer);
-        procedure ServerSocket1ClientRead(Sender: TObject; Socket: TCustomWinSocket);
-        procedure ServerSocket1ClientWrite(Sender: TObject; Socket: TCustomWinSocket);
-        procedure ServerSocket1GetSocket(Sender: TObject; Socket: Integer; var ClientSocket: TServerClientWinSocket);
-        procedure ServerSocket1GetThread(Sender: TObject; ClientSocket: TServerClientWinSocket; var SocketThread: TServerClientThread);
-        procedure ServerSocket1Listen(Sender: TObject; Socket: TCustomWinSocket);
-        procedure ServerSocket1ThreadEnd(Sender: TObject; Thread: TServerClientThread);
-        procedure ServerSocket1ThreadStart(Sender: TObject; Thread: TServerClientThread);
         procedure CheckBox1Click(Sender: TObject);
+        procedure IdHTTPServer1CommandGet(AThread: TIdPeerThread;
+            ARequestInfo: TIdHTTPRequestInfo;
+            AResponseInfo: TIdHTTPResponseInfo);
+        procedure IdHTTPServer1CommandOther(Thread: TIdPeerThread;
+            const asCommand, asData, asVersion: string);
     private
         { Private declarations }
         AppWnd: DWORD;
@@ -73,69 +68,9 @@ begin
 
 end;
 
-procedure TForm1.ServerSocket1Accept(Sender: TObject; Socket: TCustomWinSocket);
-begin
-    Memo1.Text := Memo1.Text + #13#10 + 'Accept';
-end;
-
-procedure TForm1.ServerSocket1ClientConnect(Sender: TObject; Socket: TCustomWinSocket);
-begin
-    Memo1.Text := Memo1.Text + #13#10 + 'Alguem conectou';
-end;
-
-procedure TForm1.ServerSocket1ClientDisconnect(Sender: TObject; Socket: TCustomWinSocket);
-begin
-    Memo1.Text := Memo1.Text + #13#10 + 'Alguem Disconectou';
-end;
-
-procedure TForm1.ServerSocket1ClientError(Sender: TObject; Socket: TCustomWinSocket; ErrorEvent: TErrorEvent;
-    var ErrorCode: Integer);
-begin
-    Memo1.Text := Memo1.Text + #13#10 + 'Deu pau';
-end;
-
-procedure TForm1.ServerSocket1ClientRead(Sender: TObject; Socket: TCustomWinSocket);
-begin
-    if (Assigned(Socket)) then
-        ShowMessage('ClientRead ' + Socket.ReceiveText + ' - ' +
-            IntToStr(Socket.ReceiveLength));
-end;
-
-procedure TForm1.ServerSocket1ClientWrite(Sender: TObject; Socket: TCustomWinSocket);
-begin
-    Memo1.Text := Memo1.Text + #13#10 + 'ClientWrite';
-    // + Socket.ReceiveText + ' - ' + IntToStr(Socket.ReceiveLength)) ;
-end;
-
-procedure TForm1.ServerSocket1GetSocket(Sender: TObject; Socket: Integer; var ClientSocket: TServerClientWinSocket);
-begin
-    Memo1.Text := Memo1.Text + #13#10 + 'GetSocket';
-end;
-
-procedure TForm1.ServerSocket1GetThread(Sender: TObject; ClientSocket: TServerClientWinSocket; var SocketThread:
-    TServerClientThread);
-begin
-    Memo1.Text := Memo1.Text + #13#10 + 'GetThread';
-end;
-
-procedure TForm1.ServerSocket1Listen(Sender: TObject; Socket: TCustomWinSocket);
-begin
-    Memo1.Text := Memo1.Text + #13#10 + 'Listen';
-end;
-
-procedure TForm1.ServerSocket1ThreadEnd(Sender: TObject; Thread: TServerClientThread);
-begin
-    Memo1.Text := Memo1.Text + #13#10 + 'ThreadEnd';
-end;
-
-procedure TForm1.ServerSocket1ThreadStart(Sender: TObject; Thread: TServerClientThread);
-begin
-    Memo1.Text := Memo1.Text + #13#10 + 'ThreadStart';
-end;
-
 procedure TForm1.CheckBox1Click(Sender: TObject);
 begin
-    ServerSocket1.Active := CheckBox1.Checked;
+    IdHTTPServer1.Active := CheckBox1.Checked;
     if CheckBox1.Checked then
     begin
         CheckBox1.Caption := 'Socket ativado';
@@ -146,6 +81,18 @@ begin
         CheckBox1.Caption := 'Socket desativado';
         CheckBox1.Font.Color := clRed;
     end;
+end;
+
+procedure TForm1.IdHTTPServer1CommandGet(AThread: TIdPeerThread; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+begin
+    Memo1.Text := ('CommandGet:' + #13#10 + ARequestInfo.FormParams);
+end;
+
+procedure TForm1.IdHTTPServer1CommandOther(Thread: TIdPeerThread;
+    const asCommand, asData, asVersion: string);
+begin
+    if asCommand = 'post' then
+        ShowMessage(asData);
 end;
 
 end.
