@@ -58,14 +58,15 @@ begin
     end;
     if ShellExecuteEx(@SEInfo) then
     begin
-        Sleep(400);
         AppWnd := FindWindow(nil, PChar('AppTeste'));
-        if AppWnd <> 0 then
+        while AppWnd = 0 do
         begin
-            Windows.SetParent(AppWnd, SEInfo.Wnd);
-            ShowWindow(AppWnd, SW_SHOWMAXIMIZED);
-            ShowWindow(AppWnd, SW_SHOWMAXIMIZED);
+            Sleep(10);
+            AppWnd := FindWindow(nil, PChar('AppTeste'));
         end;
+        Windows.SetParent(AppWnd, SEInfo.Wnd);
+        ShowWindow(AppWnd, SW_SHOWMAXIMIZED);
+        ShowWindow(AppWnd, SW_SHOWMAXIMIZED);
     end
     else
         ShowMessage('Error starting notepad!');
