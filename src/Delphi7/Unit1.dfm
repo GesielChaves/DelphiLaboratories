@@ -1,8 +1,8 @@
 object Form1: TForm1
   Left = 192
-  Top = 125
-  Width = 1305
-  Height = 675
+  Top = 129
+  Width = 465
+  Height = 574
   Caption = 'Form1'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,30 +14,49 @@ object Form1: TForm1
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
-    Left = 224
-    Top = 304
-    Width = 465
+    Left = 8
+    Top = 272
+    Width = 417
     Height = 249
+    BevelInner = bvRaised
+    BevelOuter = bvNone
+    BevelWidth = 2
+    BorderWidth = 2
+    BorderStyle = bsSingle
     Caption = 'Panel1'
+    Color = clGradientActiveCaption
     TabOrder = 0
   end
   object Button1: TButton
-    Left = 104
-    Top = 104
-    Width = 75
+    Left = 8
+    Top = 8
+    Width = 121
     Height = 25
-    Caption = 'Button1'
+    Caption = 'Abrir o App'
     TabOrder = 1
     OnClick = Button1Click
   end
   object Memo1: TMemo
-    Left = 288
-    Top = 56
+    Left = 8
+    Top = 40
     Width = 417
     Height = 225
-    Lines.Strings = (
-      'Memo1')
     TabOrder = 2
+  end
+  object CheckBox1: TCheckBox
+    Left = 264
+    Top = 16
+    Width = 113
+    Height = 17
+    Caption = 'Socket desativado'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clRed
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 3
+    OnClick = CheckBox1Click
   end
   object ServerSocket1: TServerSocket
     Active = False
@@ -54,7 +73,7 @@ object Form1: TForm1
     OnClientRead = ServerSocket1ClientRead
     OnClientWrite = ServerSocket1ClientWrite
     OnClientError = ServerSocket1ClientError
-    Left = 248
-    Top = 56
+    Left = 416
+    Top = 16
   end
 end
