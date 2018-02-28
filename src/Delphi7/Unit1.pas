@@ -40,7 +40,7 @@ var
     ExecuteFile: string;
     SEInfo: TShellExecuteInfo;
 begin
-    ExecuteFile := 'C:\dev\DephiLaboratories\src\C#\WindowsFormsApp2\bin\Debug\WindowsFormsApp2.exe';
+    ExecuteFile := '..\C#\WindowsFormsApp2\bin\Debug\WindowsFormsApp2.exe';
 
     FillChar(SEInfo, SizeOf(SEInfo), 0);
     SEInfo.cbSize := SizeOf(TShellExecuteInfo);
