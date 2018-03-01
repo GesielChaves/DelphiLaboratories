@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Drawing;
 using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
+using WebSocketSharp.Server;
 
 namespace WindowsFormsApp2
 {
@@ -17,7 +16,7 @@ namespace WindowsFormsApp2
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var webRequest = HttpWebRequest.Create("http://localhost:9090");
+            var webRequest = WebRequest.Create("http://localhost:9090");
 
             webRequest.ContentType = "application/json";
             webRequest.Method = "POST";
@@ -28,6 +27,23 @@ namespace WindowsFormsApp2
                 stream.Write(bytes, 0, bytes.Length);
 
             webRequest.GetResponse();
+        }
+
+        private void Button2_Click(object sender, EventArgs e) => IniciarSocket();
+
+        private static void IniciarSocket()
+        {
+            try
+            {
+                var webSocket = new WebSocketServer($"ws://localhost:8190");
+                webSocket.AddWebSocketService("/", () => new RequisicaoSocket());
+                webSocket.Start();
+                MessageBox.Show("Socket iniciado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Falha ao iniciar socket: {ex.Message}");
+            }
         }
     }
 }
