@@ -2,7 +2,6 @@
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
-using WebSocketSharp.Server;
 
 namespace WindowsFormsApp2
 {
@@ -35,10 +34,7 @@ namespace WindowsFormsApp2
         {
             try
             {
-                var webSocket = new WebSocketServer($"ws://localhost:8190");
-                webSocket.AddWebSocketService("/", () => new RequisicaoSocket());
-                webSocket.Start();
-                MessageBox.Show("Socket iniciado com sucesso.");
+                WebHoster.Start();
             }
             catch (Exception ex)
             {

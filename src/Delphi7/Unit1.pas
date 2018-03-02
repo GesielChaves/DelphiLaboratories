@@ -5,25 +5,19 @@ interface
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ShellApi, ScktComp, IdBaseComponent,
-    IdComponent, IdTCPServer, IdCustomHTTPServer, IdHTTPServer;
+    IdComponent, IdTCPServer, IdCustomHTTPServer, IdHTTPServer, IdHTTP, uConectaApp;
 
 type
     TForm1 = class(TForm)
         Panel1: TPanel;
         Button1: TButton;
         Memo1: TMemo;
-        CheckBox1: TCheckBox;
-        IdHTTPServer1: TIdHTTPServer;
+        Button2: TButton;
         procedure Button1Click(Sender: TObject);
-        procedure CheckBox1Click(Sender: TObject);
-        procedure IdHTTPServer1CommandGet(AThread: TIdPeerThread;
-            ARequestInfo: TIdHTTPRequestInfo;
-            AResponseInfo: TIdHTTPResponseInfo);
-        procedure IdHTTPServer1CommandOther(Thread: TIdPeerThread;
-            const asCommand, asData, asVersion: string);
+        procedure Button2Click(Sender: TObject);
     private
+        procedure DoIt(Valor: string);
         { Private declarations }
-        AppWnd: DWORD;
     public
         { Public declarations }
     end;
@@ -37,62 +31,25 @@ implementation
 
 procedure TForm1.Button1Click(Sender: TObject);
 var
-    ExecuteFile: string;
     SEInfo: TShellExecuteInfo;
 begin
-    ExecuteFile := '..\C#\WindowsFormsApp2\bin\Debug\WindowsFormsApp2.exe';
-
-    FillChar(SEInfo, SizeOf(SEInfo), 0);
-    SEInfo.cbSize := SizeOf(TShellExecuteInfo);
-    with SEInfo do
-    begin
-        fMask := SEE_MASK_NOCLOSEPROCESS;
-        Wnd := panel1.Handle;
-        lpFile := PChar(ExecuteFile);
-        nShow := SW_HIDE;
-    end;
-    if ShellExecuteEx(@SEInfo) then
-    begin
-        AppWnd := FindWindow(nil, PChar('AppTeste'));
-        while AppWnd = 0 do
-        begin
-            Sleep(10);
-            AppWnd := FindWindow(nil, PChar('AppTeste'));
-        end;
-        Windows.SetParent(AppWnd, SEInfo.Wnd);
-        ShowWindow(AppWnd, SW_SHOWMAXIMIZED);
-        ShowWindow(AppWnd, SW_SHOWMAXIMIZED);
-    end
-    else
-        ShowMessage('Error starting notepad!');
-
+    ConectaApp.Instancia.Iniciar(panel1.Handle, Self);
+    ConectaApp.Instancia.FEvento := DoIt;
 end;
 
-procedure TForm1.CheckBox1Click(Sender: TObject);
+procedure TForm1.DoIt(Valor: string);
 begin
-    IdHTTPServer1.Active := CheckBox1.Checked;
-    if CheckBox1.Checked then
-    begin
-        CheckBox1.Caption := 'Socket ativado';
-        CheckBox1.Font.Color := clGreen;
-    end
-    else
-    begin
-        CheckBox1.Caption := 'Socket desativado';
-        CheckBox1.Font.Color := clRed;
-    end;
+    Memo1.Text := 'CommandGet:' + #13#10 + Valor;
 end;
 
-procedure TForm1.IdHTTPServer1CommandGet(AThread: TIdPeerThread; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+procedure TForm1.Button2Click(Sender: TObject);
+var
+    client: TIdHttp;
+    resultado: string;
 begin
-    Memo1.Text := ('CommandGet:' + #13#10 + ARequestInfo.FormParams);
-end;
-
-procedure TForm1.IdHTTPServer1CommandOther(Thread: TIdPeerThread;
-    const asCommand, asData, asVersion: string);
-begin
-    if asCommand = 'post' then
-        ShowMessage(asData);
+    client := TIdHTTP.Create(Self);
+    resultado := client.Get('http://localhost:1234');
+    ShowMessage(resultado);
 end;
 
 end.

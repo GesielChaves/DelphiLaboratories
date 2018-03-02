@@ -43,33 +43,13 @@ object Form1: TForm1
     Height = 225
     TabOrder = 2
   end
-  object CheckBox1: TCheckBox
-    Left = 264
-    Top = 16
-    Width = 113
-    Height = 17
-    Caption = 'Socket desativado'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clRed
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 3
-    OnClick = CheckBox1Click
-  end
-  object IdHTTPServer1: TIdHTTPServer
-    Bindings = <>
-    CommandHandlers = <>
-    DefaultPort = 9090
-    Greeting.NumericCode = 0
-    MaxConnectionReply.NumericCode = 0
-    ReplyExceptionCode = 0
-    ReplyTexts = <>
-    ReplyUnknownCommand.NumericCode = 0
-    OnCommandOther = IdHTTPServer1CommandOther
-    OnCommandGet = IdHTTPServer1CommandGet
-    Left = 416
+  object Button2: TButton
+    Left = 136
     Top = 8
+    Width = 75
+    Height = 25
+    Caption = 'Button2'
+    TabOrder = 3
+    OnClick = Button2Click
   end
 end
