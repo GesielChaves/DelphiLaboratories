@@ -3,12 +3,12 @@ unit uConectaApp;
 interface
 
 uses
-    Windows, ShellApi, Classes, IdHTTPServer, IdTCPServer, IdCustomHTTPServer, Dialogs;
+    Windows, ShellApi, Classes, IdHTTPServer, IdTCPServer, IdCustomHTTPServer, uEventAggregator;
 
 type
     TOnRequestEvent = procedure(Valor: string) of object;
 
-    ConectaApp = class
+    TConectaApp = class
     private
         FAtiva: boolean;
         FServidor: TIdHTTPServer;
@@ -19,23 +19,23 @@ type
     public
         FEvento: TOnRequestEvent;
         procedure Iniciar(Handle: HWND; Owner: TComponent);
-        class function Instancia: ConectaApp;
+        class function Instancia: TConectaApp;
         property Ativa: Boolean read FAtiva;
     end;
 
 implementation
 
 var
-    FInstancia: ConectaApp;
+    FInstancia: TConectaApp;
 
-    { ConectaApp }
+    { TConectaApp }
 
-constructor ConectaApp.Create;
+constructor TConectaApp.Create;
 begin
     FAtiva := False;
 end;
 
-procedure ConectaApp.Iniciar(Handle: HWND; Owner: TComponent);
+procedure TConectaApp.Iniciar(Handle: HWND; Owner: TComponent);
 var
     ExecuteFile: string;
     SEInfo: TShellExecuteInfo;
@@ -46,7 +46,7 @@ begin
     FAtiva := true;
 end;
 
-procedure ConectaApp.IniciarApp(Handle: HWND);
+procedure TConectaApp.IniciarApp(Handle: HWND);
 var
     ExecuteFile: string;
     SEInfo: TShellExecuteInfo;
@@ -75,7 +75,7 @@ begin
     ShowWindow(Janela, SW_SHOWMAXIMIZED);
 end;
 
-procedure ConectaApp.IniciarServidor(Owner: TComponent);
+procedure TConectaApp.IniciarServidor(Owner: TComponent);
 begin
     FServidor := TIdHTTPServer.Create(Owner);
     FServidor.DefaultPort := 9090;
@@ -83,23 +83,25 @@ begin
     FServidor.Active := true;
 end;
 
-class function ConectaApp.Instancia: ConectaApp;
+class function TConectaApp.Instancia: TConectaApp;
 begin
     if Assigned(FInstancia) then
         Result := FInstancia
     else
     begin
-        FInstancia := ConectaApp.Create;
+        FInstancia := TConectaApp.Create;
         Result := FInstancia;
     end;
 end;
 
-procedure ConectaApp.QuandoReceberRequest(AThread: TIdPeerThread; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+procedure TConectaApp.QuandoReceberRequest(AThread: TIdPeerThread; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 var
     stringStream: TStringStream;
+    input: string;
 begin
-    Self.FEvento(ARequestInfo.FormParams);
-    AResponseInfo.ContentStream := TStringStream.Create('Veio do Delphi 7');
+    input := ARequestInfo.FormParams;
+    Self.FEvento(input);
+    AResponseInfo.ContentStream := TStringStream.Create(TEventAggregator.Publish(input, TObject(input)));
     AResponseInfo.WriteContent;
 end;
 

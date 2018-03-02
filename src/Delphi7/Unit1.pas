@@ -33,8 +33,8 @@ procedure TForm1.Button1Click(Sender: TObject);
 var
     SEInfo: TShellExecuteInfo;
 begin
-    ConectaApp.Instancia.Iniciar(panel1.Handle, Self);
-    ConectaApp.Instancia.FEvento := DoIt;
+    TConectaApp.Instancia.Iniciar(panel1.Handle, Self);
+    TConectaApp.Instancia.FEvento := DoIt;
 end;
 
 procedure TForm1.DoIt(Valor: string);

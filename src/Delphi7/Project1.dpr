@@ -3,7 +3,9 @@ program Project1;
 uses
   Forms,
   Unit1 in 'Unit1.pas' {Form1},
-  uConectaApp in 'uConectaApp.pas';
+  uConectaApp in 'uConectaApp.pas',
+  uCalculadora in 'uCalculadora.pas',
+  uEventAggregator in 'uEventAggregator.pas';
 
 {$R *.res}
 

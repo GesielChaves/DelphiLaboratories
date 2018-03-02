@@ -8,10 +8,10 @@ namespace WindowsFormsApp2
 {
     public partial class Form1 : Form
     {
-        public Form1()
+        public Form1(string[] args)
         {
             InitializeComponent();
-            textBox1.Text = @"{ ""action"": ""somar"", ""parameters"": [1,2]  }";
+            textBox1.Text = string.Join(",",args);
         }
 
         private void button1_Click(object sender, EventArgs e)
