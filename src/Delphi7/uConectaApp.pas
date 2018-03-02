@@ -95,8 +95,12 @@ begin
 end;
 
 procedure ConectaApp.QuandoReceberRequest(AThread: TIdPeerThread; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+var
+    stringStream: TStringStream;
 begin
     Self.FEvento(ARequestInfo.FormParams);
+    AResponseInfo.ContentStream := TStringStream.Create('Veio do Delphi 7');
+    AResponseInfo.WriteContent;
 end;
 
 end.

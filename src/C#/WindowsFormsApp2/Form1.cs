@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
@@ -25,7 +26,10 @@ namespace WindowsFormsApp2
             using (var stream = webRequest.GetRequestStream())
                 stream.Write(bytes, 0, bytes.Length);
 
-            webRequest.GetResponse();
+            var response = webRequest.GetResponse();
+
+            using (var sr = new StreamReader(response.GetResponseStream()))
+                textBox1.Text = sr.ReadToEnd();
         }
 
         private void Button2_Click(object sender, EventArgs e) => IniciarSocket();
